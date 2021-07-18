@@ -1,5 +1,13 @@
 modules-$(CONFIG_SLANG) += slang
 
+ifeq "$(CONFIG_TARGET)" "x86"
+	SLANG_TARGET := i386-elf-linux
+else ifeq "$(CONFIG_TARGET)" "ppc64"
+	SLANG_TARGET := powerpc64le-elf-linux
+else
+	$(error "$(CONFIG_TARGET) target isn't supported by this module")
+endif
+
 slang_version := 2.3.1a
 slang_dir := slang-$(slang_version)
 slang_tar := slang-$(slang_version).tar.bz2
@@ -10,7 +18,7 @@ slang_configure := ./configure \
 	$(CROSS_TOOLS) \
 	ac_cv_path_nc5config=no \
 	--prefix "/" \
-	--host i386-elf-linux \
+	--host "$(SLANG_TARGET)" \
 	--with-z=no \
 	--with-png=no \
 	--with-pcre=no \

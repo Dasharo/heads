@@ -1,5 +1,13 @@
 modules-$(CONFIG_UTIL_LINUX) += util-linux
 
+ifeq "$(CONFIG_TARGET)" "x86"
+	UTIL_LINUX_TARGET := i386-elf-linux
+else ifeq "$(CONFIG_TARGET)" "ppc64"
+	UTIL_LINUX_TARGET := powerpc64le-elf-linux
+else
+	$(error "$(CONFIG_TARGET) target isn't supported by this module")
+endif
+
 util-linux_version := 2.29.2
 util-linux_dir := util-linux-$(util-linux_version)
 util-linux_tar := util-linux-$(util-linux_version).tar.xz
@@ -8,7 +16,7 @@ util-linux_hash := accea4d678209f97f634f40a93b7e9fcad5915d1f4749f6c47bee6bf110fe
 
 util-linux_configure := ./configure \
 	$(CROSS_TOOLS) \
-	--host i386-elf-linux \
+	--host "$(UTIL_LINUX_TARGET)" \
 	--prefix "/" \
 	--oldincludedir "$(INSTALL)/include" \
 	--without-ncurses \

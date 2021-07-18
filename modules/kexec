@@ -1,5 +1,13 @@
 modules-$(CONFIG_KEXEC) += kexec
 
+ifeq "$(CONFIG_TARGET)" "x86"
+	CONFIG_KEXEC_TARGET := x86_64
+else ifeq "$(CONFIG_TARGET)" "ppc64"
+	CONFIG_KEXEC_TARGET := powerpc64le
+else
+	$(error "$(CONFIG_TARGET) target isn't supported by this module")
+endif
+
 kexec_version := 2.0.22
 kexec_dir := kexec-tools-$(kexec_version)
 kexec_tar := kexec-tools-$(kexec_version).tar.gz
@@ -9,7 +17,7 @@ kexec_hash := 40623d4321be2865ef9ea2cd6ec998d31dcf93d0f74353cbd3aa06d8821e3e41
 kexec_configure := ./configure \
 	$(CROSS_TOOLS) \
 	--host i386-elf-linux \
-	--target x86_64 \
+	--target "$(CONFIG_KEXEC_TARGET)" \
 	--prefix="/" \
 	--without-lzma \
 	&& $(MAKE) clean
