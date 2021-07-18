@@ -1,0 +1,45 @@
+From 9e4102c27e73c9943d07f419451a39bfa098c02d Mon Sep 17 00:00:00 2001
+From: Sergii Dmytruk <sergii.dmytruk@3mdeb.com>
+Date: Thu, 1 Jul 2021 18:24:02 +0300
+Subject: [PATCH 2/6] external/skiboot: do not hard-code value of CROSS
+
+Currently building with `powerpc64-linux-musl-` fails because of this.
+
+Change-Id: Idb64a34c83c5f9dc9bc1d7143997b16decabc219
+Signed-off-by: Sergii Dmytruk <sergii.dmytruk@3mdeb.com>
+---
+ payloads/external/skiboot/Makefile | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/payloads/external/skiboot/Makefile b/payloads/external/skiboot/Makefile
+index ef2e6f1dcd..ff99b6d8cc 100644
+--- a/payloads/external/skiboot/Makefile
++++ b/payloads/external/skiboot/Makefile
+@@ -8,6 +8,7 @@ skiboot_dir=$(CURDIR)/talos-skiboot
+ skiboot_git_repo=https://git.raptorcs.com/git/talos-skiboot
+ skiboot=$(skiboot_dir)/skiboot.lid
+ uimage=$(build_dir)/skiboot.uimage
++skiboot_cross=$(or $(CROSS),powerpc64-linux-gnu-)
+ 
+ unexport $(COREBOOT_EXPORTS)
+ 
+@@ -22,7 +23,7 @@ $(device_tree_blob): $(build_dir) $(device_tree_source)
+ 	dtc -I dts -O dtb -o $(device_tree_blob) $(device_tree_source)
+ 
+ $(skiboot): $(skiboot_dir)
+-	$(MAKE) -C $(skiboot_dir) -j`nproc` CROSS=powerpc64-linux-gnu-
++	$(MAKE) -C $(skiboot_dir) -j`nproc` "CROSS=$(skiboot_cross)"
+ 
+ $(skiboot_dir):
+ 	git clone $(skiboot_git_repo) $(skiboot_dir)
+@@ -37,6 +38,6 @@ distclean:
+ 
+ clean:
+ 	if [ -d $(skiboot_dir) ]; then \
+-		$(MAKE) -C $(skiboot_dir) CROSS=powerpc64-linux-gnu- RM="rm -f" clean > /dev/null; \
++		$(MAKE) -C $(skiboot_dir) "CROSS=$(skiboot_cross)" RM="rm -f" clean > /dev/null; \
+ 	fi
+ 	rm -rf $(build_dir)
+-- 
+2.17.6
+
