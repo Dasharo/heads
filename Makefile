@@ -110,6 +110,9 @@ ifneq "y" "$(shell [ -r '$(CONFIG)' ] && echo y)"
 $(error $(CONFIG): board configuration does not exist)
 endif
 
+# This is to be used in board configuration, must not expand right here
+board_build = $(top_build)/$(CONFIG_TARGET)/$(BOARD)
+
 include $(CONFIG)
 
 # Unless otherwise specified, we are building for heads
