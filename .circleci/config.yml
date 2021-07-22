@@ -3,6 +3,8 @@ version: 2.1
 commands:
   build_board:
     parameters:
+      arch:
+        type: string
       target:
         type: string
     steps:
@@ -14,7 +16,7 @@ commands:
       - run:
           name: Make Board
           command: |
-            rm -rf build/<<parameters.target>>/* build/log/* && make CPUS=16 V=1 BOARD=<<parameters.target>> || touch ./tmpDir/failed_build
+            rm -rf build/<<parameters.arch>>/<<parameters.target>>/* build/<<parameters.arch>>/log/* && make CPUS=16 V=1 BOARD=<<parameters.target>> || touch ./tmpDir/failed_build
           no_output_timeout: 3h
       - run:
           name: Output build failing logs
@@ -23,13 +25,13 @@ commands:
       - run:
           name: Output hashes
           command: |
-            cat build/<<parameters.target>>/hashes.txt \
+            cat build/<<parameters.arch>>/<<parameters.target>>/hashes.txt \
       - run:
           name: Archiving build logs.
           command: |
-             tar zcvf build/<<parameters.target>>/logs.tar.gz build/log/*
+             tar zcvf build/<<parameters.arch>>/<<parameters.target>>/logs.tar.gz build/<<parameters.arch>>/log/*
       - store_artifacts:
-          path: build/<<parameters.target>>
+          path: build/<<parameters.arch>>/<<parameters.target>>
 
 jobs:
   prep_env:
@@ -56,17 +58,17 @@ jobs:
       - run:
           name: Creating all modules and patches digest (All modules cache digest)
           command: |
-            find ./patches/ ./modules/ -type f | sort -h |xargs sha256sum > ./tmpDir/all_modules_and_patches.sha256sums \
+            find Makefile ./patches/ ./modules/ -type f | sort -h |xargs sha256sum > ./tmpDir/all_modules_and_patches.sha256sums \
 
       - run:
           name: Creating coreboot (and associated patches) and musl-cross-make modules digest (musl-cross-make and coreboot cache digest)
           command: |
-            find ./modules/coreboot ./modules/musl-cross* ./patches/coreboot* -type f | sort -h | xargs sha256sum > ./tmpDir/coreboot_musl-cross.sha256sums \
+            find Makefile ./modules/coreboot ./modules/musl-cross* ./patches/coreboot* -type f | sort -h | xargs sha256sum > ./tmpDir/coreboot_musl-cross.sha256sums \
 
       - run:
           name: Creating musl-cross-make and musl-cross-make patches digest (musl-cross-make cache digest)
           command: |
-            find modules/musl-cross* -type f | sort -h | xargs sha256sum > ./tmpDir/musl-cross.sha256sums \
+            find Makefile modules/musl-cross* -type f | sort -h | xargs sha256sum > ./tmpDir/musl-cross.sha256sums \
 
       - restore_cache:
           keys:
@@ -103,12 +105,16 @@ jobs:
     docker:
       - image: debian:10
     parameters:
+      arch:
+        type: string
+        default: x86
       target:
         type: string
     steps:
       - attach_workspace:
           at: ~/
       - build_board:
+          arch: <<parameters.arch>>
           target: <<parameters.target>>
       - persist_to_workspace:
           root: ~/
@@ -119,12 +125,16 @@ jobs:
     docker:
       - image: debian:10
     parameters:
+      arch:
+        type: string
+        default: x86
       target:
         type: string
     steps:
       - attach_workspace:
           at: ~/
       - build_board:
+          arch: <<parameters.arch>>
           target: <<parameters.target>>
 
   save_cache:
@@ -138,14 +148,14 @@ jobs:
           key: heads-musl-cross-{{ checksum "./tmpDir/musl-cross.sha256sums" }}{{ .Environment.CACHE_VERSION }}
           paths:
             - crossgcc
-            - build/musl-cross-*
+            - build/*/musl-cross-*
       - save_cache:
           #Generate cache for the same coreboot mnd musl-cross-make modules definition if hash is not previously existing
           key: heads-coreboot-musl-cross-{{ checksum "./tmpDir/coreboot_musl-cross.sha256sums" }}{{ .Environment.CACHE_VERSION }}
           paths:
-            - build/coreboot-*
+            - build/*/coreboot-*
             - crossgcc
-            - build/musl-cross-*
+            - build/*/musl-cross-*
       - save_cache:
           #Generate cache for the exact same modules definitions if hash is not previously existing
           key: heads-modules-and-patches-{{ checksum "./tmpDir/all_modules_and_patches.sha256sums" }}{{ .Environment.CACHE_VERSION }}

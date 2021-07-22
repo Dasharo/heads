@@ -25,17 +25,17 @@ endif
 modules-y 	:=
 pwd 		:= $(shell pwd)
 packages 	?= $(pwd)/packages
-build		:= $(pwd)/build
+top_build  	:= $(pwd)/build
 config		:= $(pwd)/config
 INSTALL		:= $(pwd)/install
-log_dir		:= $(build)/log
+top_log		:= $(top_build)/log
 
 # Controls how many parallel jobs are invoked in subshells
 CPUS		?= $(shell nproc)
 #MAKE_JOBS	?= -j$(CPUS) --max-load 16
 
 # Create the log directory if it doesn't already exist
-BUILD_LOG := $(shell mkdir -p "$(log_dir)" )
+BUILD_LOG := $(shell mkdir -p "$(top_log)" )
 
 WGET ?= wget
 
@@ -62,7 +62,7 @@ ifeq "" "$(filter $(LOCAL_GAWK_MAJOR_VERSION).%,$(gawk_version))"
 # Wrong gawk version detected -- build our local version
 # and re-invoke the Makefile with it instead.
 $(eval $(shell echo >&2 "$(DATE) Wrong gawk detected: $(LOCAL_GAWK_VERSION)"))
-HEADS_GAWK := $(build)/$(gawk_dir)/gawk
+HEADS_GAWK := $(top_build)/$(gawk_dir)/gawk
 
 # Once we have a suitable version of gawk, we can rerun make
 all linux cpio run: $(HEADS_GAWK)
@@ -80,25 +80,25 @@ $(packages)/$(gawk_tar):
 	fi
 	mv "$@.tmp" "$@"
 
-$(build)/$(gawk_dir)/.extract: $(packages)/$(gawk_tar)
-	tar xf "$<" -C "$(build)"
+$(top_build)/$(gawk_dir)/.extract: $(packages)/$(gawk_tar)
+	tar xf "$<" -C "$(top_build)"
 	touch "$@"
 
-$(build)/$(gawk_dir)/.patch: $(build)/$(gawk_dir)/.extract
+$(top_build)/$(gawk_dir)/.patch: $(top_build)/$(gawk_dir)/.extract
 #	( cd "$(dir $@)" ; patch -p1 ) < "patches/gawk-$(gawk_version).patch"
 	touch "$@"
 
-$(build)/$(gawk_dir)/.configured: $(build)/$(gawk_dir)/.patch
+$(top_build)/$(gawk_dir)/.configured: $(top_build)/$(gawk_dir)/.patch
 	cd "$(dir $@)" ; \
 	./configure 2>&1 \
-	| tee "$(log_dir)/gawk.configure.log" \
+	| tee "$(top_log)/gawk.configure.log" \
 	$(VERBOSE_REDIRECT)
 	touch "$@"
 
-$(HEADS_GAWK): $(build)/$(gawk_dir)/.configured
+$(HEADS_GAWK): $(top_build)/$(gawk_dir)/.configured
 	$(MAKE) -C "$(dir $@)" $(MAKE_JOBS) \
 		2>&1 \
-		| tee "$(log_dir)/gawk.log" \
+		| tee "$(top_log)/gawk.log" \
 		$(VERBOSE_REDIRECT)
 endif
 
@@ -110,13 +110,25 @@ ifneq "y" "$(shell [ -r '$(CONFIG)' ] && echo y)"
 $(error $(CONFIG): board configuration does not exist)
 endif
 
+# By default, we are building for x86
+CONFIG_TARGET := x86
+
 # This is to be used in board configuration, must not expand right here
 board_build = $(top_build)/$(CONFIG_TARGET)/$(BOARD)
 
 include $(CONFIG)
 
 # Unless otherwise specified, we are building for heads
-CONFIG_HEADS	?= y
+CONFIG_HEADS ?= y
+
+# Use target-specific install directory.
+INSTALL := $(INSTALL)/$(CONFIG_TARGET)
+
+# Use target-specific build directory for building modules.
+build		:= $(top_build)/$(CONFIG_TARGET)
+log_dir		:= $(build)/log
+
+BUILD_LOG := $(shell mkdir -p "$(log_dir)" )
 
 # record the build date / git hashes and other files here
 HASHES		:= $(build)/$(BOARD)/hashes.txt
