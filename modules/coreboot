@@ -37,7 +37,8 @@ else ifeq "$(CONFIG_COREBOOT_VERSION)" "4.14"
 else ifeq "$(CONFIG_COREBOOT_VERSION)" "talos_2_support_payload"
 	coreboot_version = git
 	coreboot_patch_version := talos_2_support_payload
-	coreboot_repo := -b talos_2_support_payload https://github.com/3mdeb/coreboot
+	coreboot_commit_hash = ce64c091228ed8878263263fd7fe700e64557148
+	coreboot_repo := https://github.com/3mdeb/coreboot
 else
 	$(error "$(BOARD): does not specify coreboot version under CONFIG_COREBOOT_VERSION")
 endif 
