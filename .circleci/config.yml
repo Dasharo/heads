@@ -243,6 +243,13 @@ workflows:
           requires:
             - x230-hotp-maximized
 
+      - build:
+          name: novacustom-nv41
+          target: novacustom-nv41
+          subcommand: ""
+          requires:
+            - x230-hotp-maximized
+
       # coreboot-git Talos II (PPC)
       - build_and_persist:
           name: talos-2
@@ -257,6 +264,7 @@ workflows:
           requires:
             - talos-2
             - nitropad-nv41
+            - novacustom-nv41
 
 #
 # Those onboarding new boards should add their entries below.
@@ -559,6 +567,13 @@ workflows:
           subcommand: ""
           requires:
             - nitropad-nv41
+
+      - build:
+          name: novacustom-ns50
+          target: novacustom-ns50
+          subcommand: ""
+          requires:
+            - novacustom-nv41
 
 #      - build:
 #          name: UNTESTED_kgpe-d16_workstation-usb_keyboard
