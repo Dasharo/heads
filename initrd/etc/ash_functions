@@ -347,8 +347,8 @@ enable_usb()
 	if ! lsmod | grep -q xhci_pci; then
 		insmod /lib/modules/xhci-pci.ko \
 		|| die "xhci_pci: module load failed"
-		sleep 2
 	fi
+	sleep 2
 
 	if [ "$CONFIG_USB_KEYBOARD" = y ]; then
 		if ! lsmod | grep -q usbhid; then
