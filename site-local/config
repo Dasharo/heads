@@ -3,31 +3,31 @@ BRAND_NAME=Dasharo
 ifeq "nitropad-nv41" "$(BOARD)"
 
 export CONFIG_BOARD_NAME="NovaCustom NV4xPZ"
-export CONFIG_COREBOOT_LOCALVERSION="\(coreboot+heads\) v0.9.0"
+export CONFIG_COREBOOT_LOCALVERSION="\(coreboot+heads\) v0.9.1"
 export CONFIG_COREBOOT_SMBIOS_PRODUCT_NAME=NV4xPZ
 export CONFIG_COREBOOT_SMBIOS_MANUFACTURER=Notebook
 
 else ifeq "nitropad-ns50" "$(BOARD)"
 
 export CONFIG_BOARD_NAME="NovaCustom NS5x_NS7xPU"
-export CONFIG_COREBOOT_LOCALVERSION="\(coreboot+heads\) v0.9.0"
+export CONFIG_COREBOOT_LOCALVERSION="\(coreboot+heads\) v0.9.1"
 export CONFIG_COREBOOT_SMBIOS_PRODUCT_NAME=NS5x_NS7xPU
 export CONFIG_COREBOOT_SMBIOS_MANUFACTURER=Notebook
 
 else ifeq "msi_z690a_ddr4" "$(BOARD)"
 
-export CONFIG_COREBOOT_LOCALVERSION="\(coreboot+heads\) v0.9.0"
+export CONFIG_COREBOOT_LOCALVERSION="\(coreboot+heads\) v0.9.1"
 
 else ifeq "msi_z690a_ddr5" "$(BOARD)"
 
-export CONFIG_COREBOOT_LOCALVERSION="\(coreboot+heads\) v0.9.0"
+export CONFIG_COREBOOT_LOCALVERSION="\(coreboot+heads\) v0.9.1"
 
 else ifeq "msi_z790p_ddr4" "$(BOARD)"
 
-export CONFIG_COREBOOT_LOCALVERSION="\(coreboot+heads\) v0.9.0"
+export CONFIG_COREBOOT_LOCALVERSION="\(coreboot+heads\) v0.9.1"
 
 else ifeq "msi_z790p_ddr5" "$(BOARD)"
 
-export CONFIG_COREBOOT_LOCALVERSION="\(coreboot+heads\) v0.9.0"
+export CONFIG_COREBOOT_LOCALVERSION="\(coreboot+heads\) v0.9.1"
 
 endif
