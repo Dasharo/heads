@@ -10,7 +10,7 @@ export CONFIG_COREBOOT_LOCALVERSION="\(coreboot+heads\) v0.9.0"
 
 else ifeq "novacustom-v560tu" "$(BOARD)"
 
-export CONFIG_COREBOOT_LOCALVERSION="\(coreboot+heads\) v0.9.0-rc5"
+export CONFIG_COREBOOT_LOCALVERSION="\(coreboot+heads\) v0.9.0"
 export CONFIG_COREBOOT_SMBIOS_PRODUCT_NAME=V54x_6x_TU
 
 else ifeq "msi_z690a_ddr4" "$(BOARD)"
