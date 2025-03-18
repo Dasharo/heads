@@ -1,0 +1,32 @@
+BRAND_NAME=Dasharo
+
+ifeq "nitropad-nv41" "$(BOARD)"
+
+export CONFIG_COREBOOT_LOCALVERSION="\(coreboot+heads\) v0.9.2-rc1"
+
+else ifeq "nitropad-ns50" "$(BOARD)"
+
+export CONFIG_COREBOOT_LOCALVERSION="\(coreboot+heads\) v0.9.0"
+
+else ifeq "novacustom-v560tu" "$(BOARD)"
+
+export CONFIG_COREBOOT_LOCALVERSION="\(coreboot+heads\) v0.9.0"
+export CONFIG_COREBOOT_SMBIOS_PRODUCT_NAME=V54x_6x_TU
+
+else ifeq "msi_z690a_ddr4" "$(BOARD)"
+
+export CONFIG_COREBOOT_LOCALVERSION="\(coreboot+heads\) v0.9.0"
+
+else ifeq "msi_z690a_ddr5" "$(BOARD)"
+
+export CONFIG_COREBOOT_LOCALVERSION="\(coreboot+heads\) v0.9.0"
+
+else ifeq "msi_z790p_ddr4" "$(BOARD)"
+
+export CONFIG_COREBOOT_LOCALVERSION="\(coreboot+heads\) v0.9.0"
+
+else ifeq "msi_z790p_ddr5" "$(BOARD)"
+
+export CONFIG_COREBOOT_LOCALVERSION="\(coreboot+heads\) v0.9.0"
+
+endif
