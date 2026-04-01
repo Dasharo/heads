@@ -1,0 +1,8 @@
+BRAND_NAME=Dasharo
+
+ifeq "novacustom-v560tu" "$(BOARD)"
+
+export CONFIG_COREBOOT_LOCALVERSION="\(coreboot+heads\) v0.9.1"
+export CONFIG_COREBOOT_SMBIOS_PRODUCT_NAME="V54x_6x_TU"
+
+endif
