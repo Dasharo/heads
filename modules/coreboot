@@ -163,8 +163,8 @@ coreboot-dasharo_v56_patch_version := unreleased
 
 # NovaCustom NV4x ADL / NitroPad NS50 -- toolchain provider for all Dasharo
 #  Tag: novacustom_nv4x_adl_v1.8.0 (SHA: 281a7fec)
-coreboot-dasharo_nv4x_repo := https://github.com/dasharo/coreboot
-coreboot-dasharo_nv4x_commit_hash := 281a7fec1a1e7aed781b12a096c2fc0f87dc51b5
+coreboot-dasharo_nv4x_repo := https://git.3mdeb.com/dasharo/coreboot
+coreboot-dasharo_nv4x_commit_hash := 5c8dcf9843691256a8d838a4358f4ef417014d05
 $(eval $(call coreboot_module,dasharo_nv4x,))
 
 # MSI Z790 boards -- consumes nv4x toolchain
